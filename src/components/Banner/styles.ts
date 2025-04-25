@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { TagContainer } from '../Tag/styles'
 
 export const Imagem = styled.div`
   display: block;
@@ -7,7 +8,19 @@ export const Imagem = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   font-weight: bold;
-  padding-top: 340px;
+
+  .container {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 340px;
+  }
+
+  ${TagContainer} {
+    position: absolute;
+    top: 2rem;
+  }
 `
 
 export const Titulo = styled.h2`
