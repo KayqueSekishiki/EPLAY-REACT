@@ -27,3 +27,9 @@ export const Description = styled.p`
   line-height: 1.375rem;
   margin-top: 1rem;
 `
+
+export const Infos = styled.div`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+`
