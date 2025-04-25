@@ -4,6 +4,7 @@ import Header from './components/Header'
 import { GlobalStyle } from './styles'
 
 import Router from './routes'
+import Footer from './components/Footer'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Header />
       </div>
       <Router />
+      <Footer />
     </BrowserRouter>
   )
 }
