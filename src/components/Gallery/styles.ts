@@ -40,7 +40,7 @@ export const Item = styled.li`
 `
 
 export const Modal = styled.div`
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
 
@@ -50,6 +50,10 @@ export const Modal = styled.div`
   width: 100%;
   height: 100%;
   z-index: 1;
+
+  &.visible {
+    display: flex;
+  }
 
   .overlay {
     display: flex;
@@ -79,10 +83,20 @@ export const ModalContent = styled.div`
       font-size: 1.125rem;
       font-weight: bold;
     }
+
+    img {
+      cursor: pointer;
+    }
   }
 
-  img {
+  img,
+  iframe {
     display: block;
     max-width: 100%;
+  }
+
+  iframe {
+    width: 100%;
+    height: 30rem;
   }
 `
