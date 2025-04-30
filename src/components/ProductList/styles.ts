@@ -22,6 +22,6 @@ export const Title = styled.h2`
 export const List = styled.ul`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  column-gap: 1.5rem;
+  gap: 1.5rem;
   margin-top: 2.5rem;
 `
