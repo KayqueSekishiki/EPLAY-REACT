@@ -6,7 +6,6 @@ import Button from '../Button'
 import { Game } from '../../pages/Home'
 
 import { formatPrices } from '../ProductList'
-import { getNameOfJSDocTypedef } from 'typescript'
 
 const Banner = () => {
   const [game, setGame] = useState<Game>()
