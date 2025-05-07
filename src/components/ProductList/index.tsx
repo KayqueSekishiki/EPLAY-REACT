@@ -7,6 +7,8 @@ export type Props = {
   title: string
   background: 'gray' | 'black'
   games: Game[]
+
+  id: string
 }
 
 export const formatPrices = (price = 0) => {
@@ -16,7 +18,7 @@ export const formatPrices = (price = 0) => {
   }).format(price)
 }
 
-const ProductList = ({ title, background, games }: Props) => {
+const ProductList = ({ title, background, games, id }: Props) => {
   const getGameTags = (game: Game) => {
     const tags = []
 
@@ -36,7 +38,7 @@ const ProductList = ({ title, background, games }: Props) => {
   }
 
   return (
-    <Container background={background}>
+    <Container id={id} background={background}>
       <div className="container">
         <Title>{title}</Title>
         <List>
