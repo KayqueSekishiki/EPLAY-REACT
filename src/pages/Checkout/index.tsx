@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { Navigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
@@ -9,12 +11,24 @@ import barCodeIcon from '../../assets/images/boleto.png'
 import creditCardIcon from '../../assets/images/cartao.png'
 
 import { usePurchaseMutation } from '../../services/api'
+import { RootReducer } from '../../store'
 
 import * as S from './styles'
+import { getTotalPrices, parseToBrl } from '../../utils'
+
+type Installment = {
+  quantity: number
+  amount: number
+  formattedAmount: string
+}
 
 const Checkout = () => {
   const [payWithCard, setPayWithCard] = useState(false)
   const [purchase, { data, isSuccess }] = usePurchaseMutation()
+  const { items } = useSelector((state: RootReducer) => state.cart)
+  const [installments, setInstallments] = useState<Installment[]>([])
+
+  const totalPrices = getTotalPrices(items)
 
   const formik = useFormik({
     initialValues: {
@@ -125,13 +139,33 @@ const Checkout = () => {
     }
   })
 
-  const getErrorMessage = (fieldName: string, message?: string) => {
+  const checkInputHasError = (fieldName: string) => {
     const isChanged = fieldName in formik.touched
     const isInvalid = fieldName in formik.errors
+    const hasError = isChanged && isInvalid
 
-    if (isChanged && isInvalid) return message
+    return hasError
+  }
 
-    return ''
+  useEffect(() => {
+    const calculateInstallments = () => {
+      const installmentsArray: Installment[] = []
+      for (let i = 1; i <= 6; i++) {
+        installmentsArray.push({
+          quantity: i,
+          amount: totalPrices / i,
+          formattedAmount: parseToBrl(totalPrices / i)
+        })
+      }
+
+      return installmentsArray
+    }
+
+    if (totalPrices > 0) setInstallments(calculateInstallments())
+  }, [totalPrices])
+
+  if (items.length === 0) {
+    return <Navigate to="/" />
   }
 
   return (
@@ -150,10 +184,8 @@ const Checkout = () => {
                     value={formik.values.fullName}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
+                    className={checkInputHasError('fullname') ? 'error' : ''}
                   />
-                  <small>
-                    {getErrorMessage('fullName', formik.errors.fullName)}
-                  </small>
                 </S.InputGroup>
                 <S.InputGroup>
                   <label htmlFor="email">E-mail</label>
@@ -164,8 +196,8 @@ const Checkout = () => {
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
+                    className={checkInputHasError('email') ? 'error' : ''}
                   />
-                  <small>{getErrorMessage('email', formik.errors.email)}</small>
                 </S.InputGroup>
                 <S.InputGroup>
                   <label htmlFor="cpf">CPF</label>
@@ -176,8 +208,8 @@ const Checkout = () => {
                     value={formik.values.cpf}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
+                    className={checkInputHasError('cpf') ? 'error' : ''}
                   />
-                  <small>{getErrorMessage('cpf', formik.errors.cpf)}</small>
                 </S.InputGroup>
               </S.Row>
               <h3 className="margin-top">
@@ -193,13 +225,10 @@ const Checkout = () => {
                     value={formik.values.deliveryEmail}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
+                    className={
+                      checkInputHasError('deliveryEmail') ? 'error' : ''
+                    }
                   />
-                  <small>
-                    {getErrorMessage(
-                      'deliveryEmail',
-                      formik.errors.deliveryEmail
-                    )}
-                  </small>
                 </S.InputGroup>
                 <S.InputGroup>
                   <label htmlFor="confirmDeliveryEmail">
@@ -212,13 +241,10 @@ const Checkout = () => {
                     value={formik.values.confirmDeliveryEmail}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
+                    className={
+                      checkInputHasError('confirmDeliveryEmail') ? 'error' : ''
+                    }
                   />
-                  <small>
-                    {getErrorMessage(
-                      'confirmDeliveryEmail',
-                      formik.errors.confirmDeliveryEmail
-                    )}
-                  </small>
                 </S.InputGroup>
               </S.Row>
             </>
@@ -229,6 +255,7 @@ const Checkout = () => {
               <S.TabButton
                 isActive={!payWithCard}
                 onClick={() => setPayWithCard(false)}
+                type="button"
               >
                 <img src={barCodeIcon} alt="Boleto" />
                 Boleto bancário
@@ -236,6 +263,7 @@ const Checkout = () => {
               <S.TabButton
                 isActive={payWithCard}
                 onClick={() => setPayWithCard(true)}
+                type="button"
               >
                 <img src={creditCardIcon} alt="Cartão de crédito" />
                 Cartão de crédito
@@ -264,13 +292,10 @@ const Checkout = () => {
                           value={formik.values.cardOwner}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
+                          className={
+                            checkInputHasError('cardOwner') ? 'error' : ''
+                          }
                         />
-                        <small>
-                          {getErrorMessage(
-                            'cardOwner',
-                            formik.errors.cardOwner
-                          )}
-                        </small>
                       </S.InputGroup>
                       <S.InputGroup>
                         <label htmlFor="cpfCardOwner">
@@ -283,13 +308,10 @@ const Checkout = () => {
                           value={formik.values.cpfCardOwner}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
+                          className={
+                            checkInputHasError('cpfCardOwner') ? 'error' : ''
+                          }
                         />
-                        <small>
-                          {getErrorMessage(
-                            'cpfCardOwner',
-                            formik.errors.cpfCardOwner
-                          )}
-                        </small>
                       </S.InputGroup>
                     </S.Row>
                     <S.Row marginTop="1.5rem">
@@ -302,13 +324,10 @@ const Checkout = () => {
                           value={formik.values.cardDisplayName}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
+                          className={
+                            checkInputHasError('cardDisplayName') ? 'error' : ''
+                          }
                         />
-                        <small>
-                          {getErrorMessage(
-                            'cardDisplayName',
-                            formik.errors.cardDisplayName
-                          )}
-                        </small>
                       </S.InputGroup>
                       <S.InputGroup>
                         <label htmlFor="cardNumber">Número do cartão</label>
@@ -319,13 +338,10 @@ const Checkout = () => {
                           value={formik.values.cardNumber}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
+                          className={
+                            checkInputHasError('cardNumber') ? 'error' : ''
+                          }
                         />
-                        <small>
-                          {getErrorMessage(
-                            'cardNumber',
-                            formik.errors.cardNumber
-                          )}
-                        </small>
                       </S.InputGroup>
                       <S.InputGroup maxWidth="7.5rem">
                         <label htmlFor="expiresMonth">Mês do vencimento</label>
@@ -336,13 +352,10 @@ const Checkout = () => {
                           value={formik.values.expiresMonth}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
+                          className={
+                            checkInputHasError('expiresMonth') ? 'error' : ''
+                          }
                         />
-                        <small>
-                          {getErrorMessage(
-                            'expiresMonth',
-                            formik.errors.expiresMonth
-                          )}
-                        </small>
                       </S.InputGroup>
                       <S.InputGroup maxWidth="7.5rem">
                         <label htmlFor="expiresYear">Ano do vencimento</label>
@@ -353,13 +366,10 @@ const Checkout = () => {
                           value={formik.values.expiresYear}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
+                          className={
+                            checkInputHasError('expiresYear') ? 'error' : ''
+                          }
                         />
-                        <small>
-                          {getErrorMessage(
-                            'expiresYear',
-                            formik.errors.expiresYear
-                          )}
-                        </small>
                       </S.InputGroup>
                       <S.InputGroup maxWidth="3rem">
                         <label htmlFor="cardCode">CVV</label>
@@ -370,10 +380,10 @@ const Checkout = () => {
                           value={formik.values.cardCode}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
+                          className={
+                            checkInputHasError('cardCode') ? 'error' : ''
+                          }
                         />
-                        <small>
-                          {getErrorMessage('cardCode', formik.errors.cardCode)}
-                        </small>
                       </S.InputGroup>
                     </S.Row>
                     <S.Row marginTop="1.5rem">
@@ -385,17 +395,17 @@ const Checkout = () => {
                           value={formik.values.installments}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
+                          className={
+                            checkInputHasError('installments') ? 'error' : ''
+                          }
                         >
-                          <option value="">1x de R$200,00</option>
-                          <option value="">2x de R$200,00</option>
-                          <option value="">3x de R$200,00</option>
+                          {installments.map((installment) => (
+                            <option key={installment.quantity} value="">
+                              {installment.quantity}x de{' '}
+                              {installment.formattedAmount}
+                            </option>
+                          ))}
                         </select>
-                        <small>
-                          {getErrorMessage(
-                            'installments',
-                            formik.errors.installments
-                          )}
-                        </small>
                       </S.InputGroup>
                     </S.Row>
                   </>
@@ -403,7 +413,7 @@ const Checkout = () => {
               </div>
             </>
           </Card>
-          <Button type="button" title="Clique aqui para finalizar sua compra">
+          <Button type="submit" title="Clique aqui para finalizar sua compra">
             Finalizar compra
           </Button>
         </form>
