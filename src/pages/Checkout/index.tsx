@@ -12,7 +12,8 @@ import { usePurchaseMutation } from '../../services/api'
 
 const Checkout = () => {
   const [payWithCard, setPayWithCard] = useState(false)
-  const [purchase, { data, isLoading, isError }] = usePurchaseMutation()
+  const [purchase, { data, isSuccess, isLoading, isError }] =
+    usePurchaseMutation()
 
   const formik = useFormik({
     initialValues: {
@@ -133,260 +134,318 @@ const Checkout = () => {
   }
 
   return (
-    <form className="container" onSubmit={formik.handleSubmit}>
-      <Card title="Dados de cobrança">
-        <>
-          <Row>
-            <InputGroup>
-              <label htmlFor="fullName">Nome Completo</label>
-              <input
-                id="fullName"
-                type="text"
-                name="fullName"
-                value={formik.values.fullName}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              <small>
-                {getErrorMessage('fullName', formik.errors.fullName)}
-              </small>
-            </InputGroup>
-            <InputGroup>
-              <label htmlFor="email">E-mail</label>
-              <input
-                id="email"
-                type="email"
-                name="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              <small>{getErrorMessage('email', formik.errors.email)}</small>
-            </InputGroup>
-            <InputGroup>
-              <label htmlFor="cpf">CPF</label>
-              <input
-                id="cpf"
-                type="text"
-                name="cpf"
-                value={formik.values.cpf}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              <small>{getErrorMessage('cpf', formik.errors.cpf)}</small>
-            </InputGroup>
-          </Row>
-          <h3 className="margin-top">Dados de entrega - conteúdo digital</h3>
-          <Row>
-            <InputGroup>
-              <label htmlFor="deliveryEmail">E-mail</label>
-              <input
-                id="deliveryEmail"
-                type="email"
-                name="deliveryEmail"
-                value={formik.values.deliveryEmail}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              <small>
-                {getErrorMessage('deliveryEmail', formik.errors.deliveryEmail)}
-              </small>
-            </InputGroup>
-            <InputGroup>
-              <label htmlFor="confirmDeliveryEmail">Confirme o e-mail</label>
-              <input
-                id="confirmDeliveryEmail"
-                type="email"
-                name="confirmDeliveryEmail"
-                value={formik.values.confirmDeliveryEmail}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              <small>
-                {getErrorMessage(
-                  'confirmDeliveryEmail',
-                  formik.errors.confirmDeliveryEmail
-                )}
-              </small>
-            </InputGroup>
-          </Row>
-        </>
-      </Card>
+    <div className="container">
+      {!isSuccess ? (
+        <form onSubmit={formik.handleSubmit}>
+          <Card title="Dados de cobrança">
+            <>
+              <Row>
+                <InputGroup>
+                  <label htmlFor="fullName">Nome Completo</label>
+                  <input
+                    id="fullName"
+                    type="text"
+                    name="fullName"
+                    value={formik.values.fullName}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  <small>
+                    {getErrorMessage('fullName', formik.errors.fullName)}
+                  </small>
+                </InputGroup>
+                <InputGroup>
+                  <label htmlFor="email">E-mail</label>
+                  <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  <small>{getErrorMessage('email', formik.errors.email)}</small>
+                </InputGroup>
+                <InputGroup>
+                  <label htmlFor="cpf">CPF</label>
+                  <input
+                    id="cpf"
+                    type="text"
+                    name="cpf"
+                    value={formik.values.cpf}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  <small>{getErrorMessage('cpf', formik.errors.cpf)}</small>
+                </InputGroup>
+              </Row>
+              <h3 className="margin-top">
+                Dados de entrega - conteúdo digital
+              </h3>
+              <Row>
+                <InputGroup>
+                  <label htmlFor="deliveryEmail">E-mail</label>
+                  <input
+                    id="deliveryEmail"
+                    type="email"
+                    name="deliveryEmail"
+                    value={formik.values.deliveryEmail}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  <small>
+                    {getErrorMessage(
+                      'deliveryEmail',
+                      formik.errors.deliveryEmail
+                    )}
+                  </small>
+                </InputGroup>
+                <InputGroup>
+                  <label htmlFor="confirmDeliveryEmail">
+                    Confirme o e-mail
+                  </label>
+                  <input
+                    id="confirmDeliveryEmail"
+                    type="email"
+                    name="confirmDeliveryEmail"
+                    value={formik.values.confirmDeliveryEmail}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  <small>
+                    {getErrorMessage(
+                      'confirmDeliveryEmail',
+                      formik.errors.confirmDeliveryEmail
+                    )}
+                  </small>
+                </InputGroup>
+              </Row>
+            </>
+          </Card>
 
-      <Card title="Pagamento">
-        <>
-          <TabButton
-            isActive={!payWithCard}
-            onClick={() => setPayWithCard(false)}
-          >
-            <img src={billIcon} alt="Boleto" />
-            Boleto bancário
-          </TabButton>
-          <TabButton
-            isActive={payWithCard}
-            onClick={() => setPayWithCard(true)}
-          >
-            <img src={creditCardIcon} alt="Cartão de crédito" />
-            Cartão de crédito
-          </TabButton>
-          <div className="margin-top">
-            {!payWithCard ? (
-              <p>
-                Ao optar por essa forma de pagamento, é importante lembrar que a
-                confirmação pode levar até 3 dias úteis, devido aos prazos
-                estabelecidos pelas instituições financeiras. Portanto, a
-                liberação do código de ativação do jogo adquirido ocorrerá
-                somente após a aprovação do pagamento do boleto.
-              </p>
-            ) : (
-              <>
-                <Row>
-                  <InputGroup>
-                    <label htmlFor="cardOwner">Nome do titular do cartão</label>
-                    <input
-                      id="cardOwner"
-                      type="text"
-                      name="cardOwner"
-                      value={formik.values.cardOwner}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    <small>
-                      {getErrorMessage('cardOwner', formik.errors.cardOwner)}
-                    </small>
-                  </InputGroup>
-                  <InputGroup>
-                    <label htmlFor="cpfCardOwner">
-                      CPF do titular do cartão
-                    </label>
-                    <input
-                      id="cpfCardOwner"
-                      type="text"
-                      name="cpfCardOwner"
-                      value={formik.values.cpfCardOwner}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    <small>
-                      {getErrorMessage(
-                        'cpfCardOwner',
-                        formik.errors.cpfCardOwner
-                      )}
-                    </small>
-                  </InputGroup>
-                </Row>
-                <Row marginTop="1.5rem">
-                  <InputGroup>
-                    <label htmlFor="cardDisplayName">Nome no cartão</label>
-                    <input
-                      id="cardDisplayName"
-                      type="text"
-                      name="cardDisplayName"
-                      value={formik.values.cardDisplayName}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    <small>
-                      {getErrorMessage(
-                        'cardDisplayName',
-                        formik.errors.cardDisplayName
-                      )}
-                    </small>
-                  </InputGroup>
-                  <InputGroup>
-                    <label htmlFor="cardNumber">Número do cartão</label>
-                    <input
-                      id="cardNumber"
-                      type="text"
-                      name="cardNumber"
-                      value={formik.values.cardNumber}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    <small>
-                      {getErrorMessage('cardNumber', formik.errors.cardNumber)}
-                    </small>
-                  </InputGroup>
-                  <InputGroup maxWidth="7.5rem">
-                    <label htmlFor="expiresMonth">Mês do vencimento</label>
-                    <input
-                      id="expiresMonth"
-                      type="text"
-                      name="expiresMonth"
-                      value={formik.values.expiresMonth}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    <small>
-                      {getErrorMessage(
-                        'expiresMonth',
-                        formik.errors.expiresMonth
-                      )}
-                    </small>
-                  </InputGroup>
-                  <InputGroup maxWidth="7.5rem">
-                    <label htmlFor="expiresYear">Ano do vencimento</label>
-                    <input
-                      id="expiresYear"
-                      type="text"
-                      name="expiresYear"
-                      value={formik.values.expiresYear}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    <small>
-                      {getErrorMessage(
-                        'expiresYear',
-                        formik.errors.expiresYear
-                      )}
-                    </small>
-                  </InputGroup>
-                  <InputGroup maxWidth="3rem">
-                    <label htmlFor="cardCode">CVV</label>
-                    <input
-                      id="cardCode"
-                      type="text"
-                      name="cardCode"
-                      value={formik.values.cardCode}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    <small>
-                      {getErrorMessage('cardCode', formik.errors.cardCode)}
-                    </small>
-                  </InputGroup>
-                </Row>
-                <Row marginTop="1.5rem">
-                  <InputGroup maxWidth="9rem">
-                    <label htmlFor="installments">Parcelamento</label>
-                    <select
-                      id="installments"
-                      name="installments"
-                      value={formik.values.installments}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    >
-                      <option value="">1x de R$200,00</option>
-                      <option value="">2x de R$200,00</option>
-                      <option value="">3x de R$200,00</option>
-                    </select>
-                    <small>
-                      {getErrorMessage(
-                        'installments',
-                        formik.errors.installments
-                      )}
-                    </small>
-                  </InputGroup>
-                </Row>
-              </>
-            )}
-          </div>
-        </>
-      </Card>
-      <Button type="button" title="Clique aqui para finalizar sua compra">
-        Finalizar compra
-      </Button>
-    </form>
+          <Card title="Pagamento">
+            <>
+              <TabButton
+                isActive={!payWithCard}
+                onClick={() => setPayWithCard(false)}
+              >
+                <img src={billIcon} alt="Boleto" />
+                Boleto bancário
+              </TabButton>
+              <TabButton
+                isActive={payWithCard}
+                onClick={() => setPayWithCard(true)}
+              >
+                <img src={creditCardIcon} alt="Cartão de crédito" />
+                Cartão de crédito
+              </TabButton>
+              <div className="margin-top">
+                {!payWithCard ? (
+                  <p>
+                    Ao optar por essa forma de pagamento, é importante lembrar
+                    que a confirmação pode levar até 3 dias úteis, devido aos
+                    prazos estabelecidos pelas instituições financeiras.
+                    Portanto, a liberação do código de ativação do jogo
+                    adquirido ocorrerá somente após a aprovação do pagamento do
+                    boleto.
+                  </p>
+                ) : (
+                  <>
+                    <Row>
+                      <InputGroup>
+                        <label htmlFor="cardOwner">
+                          Nome do titular do cartão
+                        </label>
+                        <input
+                          id="cardOwner"
+                          type="text"
+                          name="cardOwner"
+                          value={formik.values.cardOwner}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                        <small>
+                          {getErrorMessage(
+                            'cardOwner',
+                            formik.errors.cardOwner
+                          )}
+                        </small>
+                      </InputGroup>
+                      <InputGroup>
+                        <label htmlFor="cpfCardOwner">
+                          CPF do titular do cartão
+                        </label>
+                        <input
+                          id="cpfCardOwner"
+                          type="text"
+                          name="cpfCardOwner"
+                          value={formik.values.cpfCardOwner}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                        <small>
+                          {getErrorMessage(
+                            'cpfCardOwner',
+                            formik.errors.cpfCardOwner
+                          )}
+                        </small>
+                      </InputGroup>
+                    </Row>
+                    <Row marginTop="1.5rem">
+                      <InputGroup>
+                        <label htmlFor="cardDisplayName">Nome no cartão</label>
+                        <input
+                          id="cardDisplayName"
+                          type="text"
+                          name="cardDisplayName"
+                          value={formik.values.cardDisplayName}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                        <small>
+                          {getErrorMessage(
+                            'cardDisplayName',
+                            formik.errors.cardDisplayName
+                          )}
+                        </small>
+                      </InputGroup>
+                      <InputGroup>
+                        <label htmlFor="cardNumber">Número do cartão</label>
+                        <input
+                          id="cardNumber"
+                          type="text"
+                          name="cardNumber"
+                          value={formik.values.cardNumber}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                        <small>
+                          {getErrorMessage(
+                            'cardNumber',
+                            formik.errors.cardNumber
+                          )}
+                        </small>
+                      </InputGroup>
+                      <InputGroup maxWidth="7.5rem">
+                        <label htmlFor="expiresMonth">Mês do vencimento</label>
+                        <input
+                          id="expiresMonth"
+                          type="text"
+                          name="expiresMonth"
+                          value={formik.values.expiresMonth}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                        <small>
+                          {getErrorMessage(
+                            'expiresMonth',
+                            formik.errors.expiresMonth
+                          )}
+                        </small>
+                      </InputGroup>
+                      <InputGroup maxWidth="7.5rem">
+                        <label htmlFor="expiresYear">Ano do vencimento</label>
+                        <input
+                          id="expiresYear"
+                          type="text"
+                          name="expiresYear"
+                          value={formik.values.expiresYear}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                        <small>
+                          {getErrorMessage(
+                            'expiresYear',
+                            formik.errors.expiresYear
+                          )}
+                        </small>
+                      </InputGroup>
+                      <InputGroup maxWidth="3rem">
+                        <label htmlFor="cardCode">CVV</label>
+                        <input
+                          id="cardCode"
+                          type="text"
+                          name="cardCode"
+                          value={formik.values.cardCode}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                        <small>
+                          {getErrorMessage('cardCode', formik.errors.cardCode)}
+                        </small>
+                      </InputGroup>
+                    </Row>
+                    <Row marginTop="1.5rem">
+                      <InputGroup maxWidth="9rem">
+                        <label htmlFor="installments">Parcelamento</label>
+                        <select
+                          id="installments"
+                          name="installments"
+                          value={formik.values.installments}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        >
+                          <option value="">1x de R$200,00</option>
+                          <option value="">2x de R$200,00</option>
+                          <option value="">3x de R$200,00</option>
+                        </select>
+                        <small>
+                          {getErrorMessage(
+                            'installments',
+                            formik.errors.installments
+                          )}
+                        </small>
+                      </InputGroup>
+                    </Row>
+                  </>
+                )}
+              </div>
+            </>
+          </Card>
+          <Button type="button" title="Clique aqui para finalizar sua compra">
+            Finalizar compra
+          </Button>
+        </form>
+      ) : (
+        <Card title="Muito Obrigado!">
+          <>
+            <p>
+              É com satisfação que informamos que recebemos seu pedido com
+              sucesso!
+              <br />
+              Abaixo estão os detalhes da sua compra:
+              <br />
+              Número do pedido: {data.orderId}
+              <br />
+              Forma de pagamento:{' '}
+              {payWithCard ? 'Cartão de crédito' : 'Boleto Bancário'}
+            </p>
+            <p className="margin-top">
+              Caso tenha optado pelo pagamento via boleto bancário, lembre-se de
+              que a confirmação pode levar até 3 dias úteis. Após a aprovação do
+              pagamento, enviaremos um e-mail contendo o código de ativação do
+              jogo.
+            </p>
+            <p className="margin-top">
+              Se você optou pelo pagamento com cartão de crédito, a liberação do
+              código de ativação ocorrerá após a aprovação da transação pela
+              operadora do cartão. Você receberá o código no e-mail cadastrado
+              em nossa loja.
+            </p>
+            <p className="margin-top">
+              Pedimos que verifique sua caixa de entrada e a pasta de spam para
+              garantir que receba nossa comunicação. Caso tenha alguma dúvida ou
+              necessite de mais informações, por favor, entre em contato conosco
+              através dos nossos canais de atendimento ao cliente.
+            </p>
+            <p className="margin-top">
+              Agradecemos por escolher a EPLAY e esperamos que desfrute do seu
+              jogo!
+            </p>
+          </>
+        </Card>
+      )}
+    </div>
   )
 }
 
