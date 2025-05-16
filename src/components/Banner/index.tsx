@@ -1,3 +1,4 @@
+import Loader from '../Loader'
 import Tag from '../Tag'
 import Button from '../Button'
 
@@ -10,7 +11,7 @@ const Banner = () => {
   const { data: game } = useGetFeaturedGameQuery()
 
   if (!game) {
-    return <h3>Carregando...</h3>
+    return <Loader />
   }
 
   return (
