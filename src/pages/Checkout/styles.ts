@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { colors } from '../../styles'
+import { breakpoints, colors } from '../../styles'
 
 type RowProps = {
   marginTop?: string
@@ -18,6 +18,10 @@ export const Row = styled.div<RowProps>`
   align-items: flex-end;
   gap: 1.5rem;
   margin-top: ${({ marginTop }) => marginTop || '0'};
+
+  @media (max-width: ${breakpoints.tablet}) {
+    display: block;
+  }
 `
 
 export const InputGroup = styled.div<InputGroupProps>`
@@ -43,6 +47,10 @@ export const InputGroup = styled.div<InputGroupProps>`
       border: 0.0625rem solid red;
     }
   }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    margin-top: 1rem;
+  }
 `
 
 export const TabButton = styled.button<TabButtonProps>`
@@ -58,5 +66,10 @@ export const TabButton = styled.button<TabButtonProps>`
 
   img {
     margin-right: 0.5rem;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    margin-top: 1rem;
   }
 `

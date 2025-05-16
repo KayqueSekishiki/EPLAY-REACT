@@ -12,6 +12,7 @@ export const Overlay = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
+  cursor: pointer;
 `
 export const CartContainer = styled.div`
   position: fixed;
@@ -38,6 +39,13 @@ export const Sidebar = styled.aside`
   ${ButtonContainer} {
     max-width: 100%;
     width: 100%;
+  }
+
+  .empty-text {
+    font-size: 0.875rem;
+    line-height: 1.375rem;
+    color: ${colors.white};
+    text-align: center;
   }
 `
 
@@ -99,5 +107,6 @@ export const CartItem = styled.li`
     position: absolute;
     top: 0.5rem;
     right: 0;
+    cursor: pointer;
   }
 `
