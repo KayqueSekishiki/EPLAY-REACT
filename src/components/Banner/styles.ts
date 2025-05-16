@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { TagContainer } from '../Tag/styles'
 
-export const Imagem = styled.div`
+export const Image = styled.div`
   position: relative;
   display: block;
   width: 100%;
@@ -35,12 +35,12 @@ export const Imagem = styled.div`
   }
 `
 
-export const Titulo = styled.h2`
+export const Title = styled.h2`
   font-size: 2.25rem;
   max-width: 450px;
 `
 
-export const Precos = styled.p`
+export const Prices = styled.p`
   font-size: 1.5rem;
   margin-top: 1.5rem;
 

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { cores } from '../../styles'
+import { colors } from '../../styles'
 
 type RowProps = {
   marginTop?: string
@@ -33,19 +33,20 @@ export const InputGroup = styled.div<InputGroupProps>`
 
   input,
   select {
-    background-color: ${cores.branca};
+    background-color: ${colors.white};
     width: 100%;
     height: 2rem;
     padding: 0 0.5rem;
-    border: 0.0625rem solid ${cores.branca};
+    border: 0.0625rem solid ${colors.white};
   }
 `
 
 export const TabButton = styled.button<TabButtonProps>`
   font-size: 0.875rem;
   font-weight: bold;
-  color: ${cores.branca};
-  background-color: ${({ isActive }) => (isActive ? cores.verde : cores.preta)};
+  color: ${colors.white};
+  background-color: ${({ isActive }) =>
+    isActive ? colors.green : colors.black};
   border-radius: 0.5rem;
   padding: 0.625rem 0.5rem;
   margin-right: 1rem;

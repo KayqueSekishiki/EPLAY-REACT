@@ -1,4 +1,4 @@
-import { Container } from './styles'
+import * as S from './styles'
 
 type Props = {
   children: JSX.Element
@@ -7,10 +7,10 @@ type Props = {
 
 const Card = ({ children, title }: Props) => {
   return (
-    <Container>
+    <S.Container>
       <h2>{title}</h2>
       {children}
-    </Container>
+    </S.Container>
   )
 }
 

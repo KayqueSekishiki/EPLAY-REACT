@@ -1,7 +1,8 @@
 import { Game } from '../../pages/Home'
+import { parseToBrl } from '../../utils'
 import Product from '../Product'
 
-import { Container, Title, List } from './styles'
+import * as S from './styles'
 
 export type Props = {
   title: string
@@ -9,13 +10,6 @@ export type Props = {
   games: Game[]
 
   id: string
-}
-
-export const formatPrices = (price = 0) => {
-  return new Intl.NumberFormat(`pt-BR`, {
-    style: 'currency',
-    currency: 'BRL'
-  }).format(price)
 }
 
 const ProductList = ({ title, background, games, id }: Props) => {
@@ -31,17 +25,17 @@ const ProductList = ({ title, background, games, id }: Props) => {
     }
 
     if (game.prices.current) {
-      tags.push(formatPrices(game.prices.current))
+      tags.push(parseToBrl(game.prices.current))
     }
 
     return tags
   }
 
   return (
-    <Container id={id} background={background}>
+    <S.Container id={id} background={background}>
       <div className="container">
-        <Title>{title}</Title>
-        <List>
+        <S.Title>{title}</S.Title>
+        <S.List>
           {games.map((game) => (
             <li key={game.id}>
               <Product
@@ -55,9 +49,9 @@ const ProductList = ({ title, background, games, id }: Props) => {
               />
             </li>
           ))}
-        </List>
+        </S.List>
       </div>
-    </Container>
+    </S.Container>
   )
 }
 

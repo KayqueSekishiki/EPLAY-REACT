@@ -1,19 +1,20 @@
 import { useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+
 import Button from '../../components/Button'
 import Card from '../../components/Card'
 
-import { Row, InputGroup, TabButton } from './styles'
-
-import billIcon from '../../assets/images/boleto.png'
+import barCodeIcon from '../../assets/images/boleto.png'
 import creditCardIcon from '../../assets/images/cartao.png'
+
 import { usePurchaseMutation } from '../../services/api'
+
+import * as S from './styles'
 
 const Checkout = () => {
   const [payWithCard, setPayWithCard] = useState(false)
-  const [purchase, { data, isSuccess, isLoading, isError }] =
-    usePurchaseMutation()
+  const [purchase, { data, isSuccess }] = usePurchaseMutation()
 
   const formik = useFormik({
     initialValues: {
@@ -139,8 +140,8 @@ const Checkout = () => {
         <form onSubmit={formik.handleSubmit}>
           <Card title="Dados de cobrança">
             <>
-              <Row>
-                <InputGroup>
+              <S.Row>
+                <S.InputGroup>
                   <label htmlFor="fullName">Nome Completo</label>
                   <input
                     id="fullName"
@@ -153,8 +154,8 @@ const Checkout = () => {
                   <small>
                     {getErrorMessage('fullName', formik.errors.fullName)}
                   </small>
-                </InputGroup>
-                <InputGroup>
+                </S.InputGroup>
+                <S.InputGroup>
                   <label htmlFor="email">E-mail</label>
                   <input
                     id="email"
@@ -165,8 +166,8 @@ const Checkout = () => {
                     onBlur={formik.handleBlur}
                   />
                   <small>{getErrorMessage('email', formik.errors.email)}</small>
-                </InputGroup>
-                <InputGroup>
+                </S.InputGroup>
+                <S.InputGroup>
                   <label htmlFor="cpf">CPF</label>
                   <input
                     id="cpf"
@@ -177,13 +178,13 @@ const Checkout = () => {
                     onBlur={formik.handleBlur}
                   />
                   <small>{getErrorMessage('cpf', formik.errors.cpf)}</small>
-                </InputGroup>
-              </Row>
+                </S.InputGroup>
+              </S.Row>
               <h3 className="margin-top">
                 Dados de entrega - conteúdo digital
               </h3>
-              <Row>
-                <InputGroup>
+              <S.Row>
+                <S.InputGroup>
                   <label htmlFor="deliveryEmail">E-mail</label>
                   <input
                     id="deliveryEmail"
@@ -199,8 +200,8 @@ const Checkout = () => {
                       formik.errors.deliveryEmail
                     )}
                   </small>
-                </InputGroup>
-                <InputGroup>
+                </S.InputGroup>
+                <S.InputGroup>
                   <label htmlFor="confirmDeliveryEmail">
                     Confirme o e-mail
                   </label>
@@ -218,27 +219,27 @@ const Checkout = () => {
                       formik.errors.confirmDeliveryEmail
                     )}
                   </small>
-                </InputGroup>
-              </Row>
+                </S.InputGroup>
+              </S.Row>
             </>
           </Card>
 
           <Card title="Pagamento">
             <>
-              <TabButton
+              <S.TabButton
                 isActive={!payWithCard}
                 onClick={() => setPayWithCard(false)}
               >
-                <img src={billIcon} alt="Boleto" />
+                <img src={barCodeIcon} alt="Boleto" />
                 Boleto bancário
-              </TabButton>
-              <TabButton
+              </S.TabButton>
+              <S.TabButton
                 isActive={payWithCard}
                 onClick={() => setPayWithCard(true)}
               >
                 <img src={creditCardIcon} alt="Cartão de crédito" />
                 Cartão de crédito
-              </TabButton>
+              </S.TabButton>
               <div className="margin-top">
                 {!payWithCard ? (
                   <p>
@@ -251,8 +252,8 @@ const Checkout = () => {
                   </p>
                 ) : (
                   <>
-                    <Row>
-                      <InputGroup>
+                    <S.Row>
+                      <S.InputGroup>
                         <label htmlFor="cardOwner">
                           Nome do titular do cartão
                         </label>
@@ -270,8 +271,8 @@ const Checkout = () => {
                             formik.errors.cardOwner
                           )}
                         </small>
-                      </InputGroup>
-                      <InputGroup>
+                      </S.InputGroup>
+                      <S.InputGroup>
                         <label htmlFor="cpfCardOwner">
                           CPF do titular do cartão
                         </label>
@@ -289,10 +290,10 @@ const Checkout = () => {
                             formik.errors.cpfCardOwner
                           )}
                         </small>
-                      </InputGroup>
-                    </Row>
-                    <Row marginTop="1.5rem">
-                      <InputGroup>
+                      </S.InputGroup>
+                    </S.Row>
+                    <S.Row marginTop="1.5rem">
+                      <S.InputGroup>
                         <label htmlFor="cardDisplayName">Nome no cartão</label>
                         <input
                           id="cardDisplayName"
@@ -308,8 +309,8 @@ const Checkout = () => {
                             formik.errors.cardDisplayName
                           )}
                         </small>
-                      </InputGroup>
-                      <InputGroup>
+                      </S.InputGroup>
+                      <S.InputGroup>
                         <label htmlFor="cardNumber">Número do cartão</label>
                         <input
                           id="cardNumber"
@@ -325,8 +326,8 @@ const Checkout = () => {
                             formik.errors.cardNumber
                           )}
                         </small>
-                      </InputGroup>
-                      <InputGroup maxWidth="7.5rem">
+                      </S.InputGroup>
+                      <S.InputGroup maxWidth="7.5rem">
                         <label htmlFor="expiresMonth">Mês do vencimento</label>
                         <input
                           id="expiresMonth"
@@ -342,8 +343,8 @@ const Checkout = () => {
                             formik.errors.expiresMonth
                           )}
                         </small>
-                      </InputGroup>
-                      <InputGroup maxWidth="7.5rem">
+                      </S.InputGroup>
+                      <S.InputGroup maxWidth="7.5rem">
                         <label htmlFor="expiresYear">Ano do vencimento</label>
                         <input
                           id="expiresYear"
@@ -359,8 +360,8 @@ const Checkout = () => {
                             formik.errors.expiresYear
                           )}
                         </small>
-                      </InputGroup>
-                      <InputGroup maxWidth="3rem">
+                      </S.InputGroup>
+                      <S.InputGroup maxWidth="3rem">
                         <label htmlFor="cardCode">CVV</label>
                         <input
                           id="cardCode"
@@ -373,10 +374,10 @@ const Checkout = () => {
                         <small>
                           {getErrorMessage('cardCode', formik.errors.cardCode)}
                         </small>
-                      </InputGroup>
-                    </Row>
-                    <Row marginTop="1.5rem">
-                      <InputGroup maxWidth="9rem">
+                      </S.InputGroup>
+                    </S.Row>
+                    <S.Row marginTop="1.5rem">
+                      <S.InputGroup maxWidth="9rem">
                         <label htmlFor="installments">Parcelamento</label>
                         <select
                           id="installments"
@@ -395,8 +396,8 @@ const Checkout = () => {
                             formik.errors.installments
                           )}
                         </small>
-                      </InputGroup>
-                    </Row>
+                      </S.InputGroup>
+                    </S.Row>
                   </>
                 )}
               </div>

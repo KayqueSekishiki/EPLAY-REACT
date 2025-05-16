@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { cores } from '../../styles'
+import { colors } from '../../styles'
 import { TagContainer } from '../Tag/styles'
 
 export const Banner = styled.div`
@@ -39,7 +39,7 @@ export const Banner = styled.div`
 export const Infos = styled.div`
   max-width: 18rem;
   padding: 1rem;
-  background-color: ${cores.preta};
+  background-color: ${colors.black};
   font-weight: bold;
 
   h2 {
